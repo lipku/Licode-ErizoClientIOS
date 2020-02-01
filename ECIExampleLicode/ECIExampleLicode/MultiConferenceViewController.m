@@ -87,7 +87,7 @@ static CGFloat vHeight = 120.0;
     NSDictionary *attributes = @{
 						   @"name": kDefaultUserName,
 						   @"actualName": kDefaultUserName,
-						   @"type": @"public",
+						   @"type": @"publisher",  //@"public", //lihengz
 						   };
     [localStream setAttributes:attributes];
 	//[localStream setSignalingChannel:remoteRoom.signalingChannel];
@@ -237,7 +237,7 @@ static CGFloat vHeight = 120.0;
 
     Method 2.2: Create a token for a given room id.
     */
-    [[Nuve sharedInstance] createTokenForRoomId:roomId
+    /*[[Nuve sharedInstance] createTokenForRoomId:roomId
                                        username:username
                                            role:kLicodePresenterRole
                                      completion:^(BOOL success, NSString *token) {
@@ -247,7 +247,20 @@ static CGFloat vHeight = 120.0;
                                              [self showCallConnectViews:YES
                                                     updateStatusMessage:@"Error!"];
                                          }
-                                     }];
+                                     }];*/
+    
+    [[Nuve sharedInstance] createToken:@"basicExampleRoom"   //lihengz
+                              roomType:RoomTypeMCU  //RoomTypeP2P
+                              username:username
+                                  role:@"presenter"
+                            completion:^(BOOL success, NSString *token) {
+                                if (success) {
+                                    [remoteRoom connectWithEncodedToken:token];
+                                } else {
+                                    [self showCallConnectViews:YES
+                                           updateStatusMessage:@"Error!"];
+                                }
+                            }];
     /*
     Method 2.3: Create a Room and then create a Token.
 

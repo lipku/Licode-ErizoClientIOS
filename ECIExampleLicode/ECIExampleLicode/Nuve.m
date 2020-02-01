@@ -10,9 +10,9 @@
 #include <stdlib.h>
 #include <CommonCrypto/CommonHMAC.h>
 
-static NSString *kNuveHost          = @"http://192.168.0.101:3000";
-static NSString *kNuveServiceId     = @"58e27e2447e5cca9c7e9637a";
-static NSString *kNuveServiceKey    = @"17851";
+static NSString *kNuveHost          = @"https://webrtc.licode.com:3004";
+static NSString *kNuveServiceId     = @"5e055efd34b7197f46d0fa48";
+static NSString *kNuveServiceKey    = @"31919";
 
 @implementation Nuve
 
@@ -42,6 +42,36 @@ static NSString *kNuveServiceKey    = @"17851";
                   }
               }];
 }
+
+//-------------add by lihengz 2018.5.20--------------------------------
+- (void)createToken:(NSString *)roomName
+           roomType:(RoomType)roomType
+           username:(NSString *)username
+               role:(NSString *)role
+         completion:(NuveCreateTokenCallback)completion {
+    
+    NSString *endpoint = @"/createToken";
+    
+    NSDictionary *postData = @{
+                               @"username" : username,
+                               @"role" : role,
+                               @"room" : roomName,
+                               @"type" : @"erizo",//@"erizo",
+                               @"mediaConfiguration" : @"default"
+                               };
+    //if (roomType == RoomTypeP2P)
+    //    [postData setValue:@"p2p" forKey:@"type"];
+    
+    [self performRequest:endpoint method:@"POST" postData:postData authorization:nil
+              completion:^(BOOL success, id data) {
+                  if (success) {
+                      completion(YES, data);
+                  } else {
+                      completion(NO, nil);
+                  }
+              }];
+}
+//=========================================================================================
 
 - (void)createRoom:(NSString *)roomName
           roomType:(RoomType)roomType
